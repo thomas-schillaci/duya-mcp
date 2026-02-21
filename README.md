@@ -1,28 +1,23 @@
-# MCP Server built with mcp-use
+# duya-mcp
 
-This is an MCP server project bootstrapped with [`create-mcp-use-app`](https://mcp-use.com/docs/typescript/getting-started/quickstart).
+Simple MCP server boilerplate built with mcp-use.
 
 ## Getting Started
-
-First, run the development server:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000/inspector](http://localhost:3000/inspector) with your browser to test your server.
+Open `http://localhost:3000/inspector` to test the server.
 
-You can start building by editing the entry file. Add tools, resources, and prompts — the server auto-reloads as you edit.
+## Project Layout
 
-## Learn More
+- `index.ts` — MCP server entry file
+- `public/` — static assets (favicon, icon)
 
-To learn more about mcp-use and MCP:
+## Tools
 
-- [mcp-use Documentation](https://mcp-use.com/docs/typescript/getting-started/quickstart) — guides, API reference, and tutorials
-
-## Deploy on Manufact Cloud
-
-```bash
-npm run deploy
-```
+- `list-outfit-options` — returns top, bottom, and shoes descriptions for an occasion
+- `get-outfit-images` — returns image URLs for selected items
+- `show-outfit-images` — returns a widget that renders the selected images
