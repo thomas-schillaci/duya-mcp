@@ -24,35 +24,35 @@ const tops: OutfitItem[] = [
     name: "Cotton T-Shirt",
     description: "Soft crewneck tee with a clean, minimal fit.",
     tags: ["casual", "street", "weekend"],
-    imagePath: "/outfits/top-tshirt.jpg",
+    imagePath: "/top-tshirt.jpg",
   },
   {
     id: "top-shirt",
     name: "Oxford Shirt",
     description: "Crisp button-down with a structured collar.",
     tags: ["business", "smart-casual", "date"],
-    imagePath: "/outfits/top-shirt.jpg",
+    imagePath: "/top-shirt.jpg",
   },
   {
     id: "top-pullover",
     name: "Merino Pullover",
     description: "Lightweight knit with refined texture.",
     tags: ["smart-casual", "winter", "work"],
-    imagePath: "/outfits/top-pullover.png",
+    imagePath: "/top-pullover.png",
   },
   {
     id: "top-blazer",
     name: "Tailored Blazer",
     description: "Sharp silhouette with a polished finish.",
     tags: ["gala", "formal", "cocktail", "business"],
-    imagePath: "/outfits/top-blazer.jpg",
+    imagePath: "/top-blazer.jpg",
   },
   {
     id: "top-silk-blouse",
     name: "Silk Blouse",
     description: "Draped silk with a subtle sheen.",
     tags: ["gala", "formal", "cocktail", "date"],
-    imagePath: "/outfits/top-silk-blouse.jpg",
+    imagePath: "/top-silk-blouse.jpg",
   },
 ];
 
@@ -62,35 +62,35 @@ const bottoms: OutfitItem[] = [
     name: "Dark Jeans",
     description: "Slim dark-wash denim with clean lines.",
     tags: ["casual", "street", "weekend"],
-    imagePath: "/outfits/bottom-jeans.jpg",
+    imagePath: "/bottom-jeans.jpg",
   },
   {
     id: "bottom-chinos",
     name: "Tapered Chinos",
     description: "Cotton twill with a modern tapered leg.",
     tags: ["smart-casual", "work", "date"],
-    imagePath: "/outfits/bottom-chinos.jpg",
+    imagePath: "/bottom-chinos.jpg",
   },
   {
     id: "bottom-pleated-trousers",
     name: "Pleated Trousers",
     description: "High-waist trousers with soft drape.",
     tags: ["formal", "gala", "business"],
-    imagePath: "/outfits/bottom-pleated-trousers.jpg",
+    imagePath: "/bottom-pleated-trousers.jpg",
   },
   {
     id: "bottom-pencil-skirt",
     name: "Pencil Skirt",
     description: "Structured skirt with a clean hem.",
     tags: ["business", "cocktail", "date"],
-    imagePath: "/outfits/bottom-pencil-skirt.jpg",
+    imagePath: "/bottom-pencil-skirt.jpg",
   },
   {
     id: "bottom-floor-skirt",
     name: "Floor-Length Skirt",
     description: "Elegant full-length skirt with movement.",
     tags: ["gala", "formal"],
-    imagePath: "/outfits/bottom-floor-skirt.jpg",
+    imagePath: "/bottom-floor-skirt.jpg",
   },
 ];
 
@@ -100,35 +100,35 @@ const shoes: OutfitItem[] = [
     name: "Minimal Sneakers",
     description: "Clean leather sneakers for everyday wear.",
     tags: ["casual", "street", "weekend"],
-    imagePath: "/outfits/shoes-sneakers.jpg",
+    imagePath: "/shoes-sneakers.jpg",
   },
   {
     id: "shoes-loafers",
     name: "Leather Loafers",
     description: "Classic loafers with a sleek profile.",
     tags: ["smart-casual", "work", "date"],
-    imagePath: "/outfits/shoes-loafers.jpg",
+    imagePath: "/shoes-loafers.jpg",
   },
   {
     id: "shoes-oxfords",
     name: "Polished Oxfords",
     description: "Formal lace-ups with a glossy finish.",
     tags: ["formal", "gala", "business"],
-    imagePath: "/outfits/shoes-oxfords.jpg",
+    imagePath: "/shoes-oxfords.jpg",
   },
   {
     id: "shoes-heels",
     name: "Classic Heels",
     description: "Pointed-toe heels for evening looks.",
     tags: ["cocktail", "gala", "formal"],
-    imagePath: "/outfits/shoes-heels.jpg",
+    imagePath: "/shoes-heels.jpg",
   },
   {
     id: "shoes-ankle-boots",
     name: "Ankle Boots",
     description: "Sleek boots with a modest heel.",
     tags: ["smart-casual", "winter", "date"],
-    imagePath: "/outfits/shoes-ankle-boots.jpg",
+    imagePath: "/shoes-ankle-boots.jpg",
   },
 ];
 
@@ -147,12 +147,28 @@ function filterByOccasion(items: OutfitItem[], occasion: string) {
   return filtered.length > 0 ? filtered : items;
 }
 
-function withImagePath(item: OutfitItem) {
+function normalizeBaseUrl(baseUrl: string) {
+  if (baseUrl.includes("0.0.0.0")) {
+    return baseUrl.replace("0.0.0.0", "localhost");
+  }
+  return baseUrl;
+}
+
+function withImageUrl(item: OutfitItem, baseUrl: string) {
+  if (item.imagePath.startsWith("http://") || item.imagePath.startsWith("https://")) {
+    return {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      imageUrl: item.imagePath,
+    };
+  }
+  const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
   return {
     id: item.id,
     name: item.name,
     description: item.description,
-    imagePath: item.imagePath,
+    imageUrl: `${normalizedBaseUrl}${item.imagePath}`,
   };
 }
 
@@ -177,6 +193,7 @@ server.tool(
     },
   },
   async ({ occasion, topId, bottomId, shoesId }) => {
+    const baseUrl = process.env.MCP_URL || "http://localhost:3000";
     const top = allItems.find((item) => item.id === topId);
     const bottom = allItems.find((item) => item.id === bottomId);
     const shoesItem = allItems.find((item) => item.id === shoesId);
@@ -190,9 +207,9 @@ server.tool(
     return widget({
       props: {
         occasion,
-        top: withImagePath(top),
-        bottom: withImagePath(bottom),
-        shoes: withImagePath(shoesItem),
+        top: withImageUrl(top, baseUrl),
+        bottom: withImageUrl(bottom, baseUrl),
+        shoes: withImageUrl(shoesItem, baseUrl),
       },
       output: text("Outfit images ready"),
     });
@@ -251,6 +268,7 @@ server.tool(
     }),
   },
   async ({ topId, bottomId, shoesId }) => {
+    const baseUrl = process.env.MCP_URL || "http://localhost:3000";
     const top = allItems.find((item) => item.id === topId);
     const bottom = allItems.find((item) => item.id === bottomId);
     const shoesItem = allItems.find((item) => item.id === shoesId);
@@ -262,9 +280,9 @@ server.tool(
     }
 
     return object({
-      top: withImagePath(top),
-      bottom: withImagePath(bottom),
-      shoes: withImagePath(shoesItem),
+      top: withImageUrl(top, baseUrl),
+      bottom: withImageUrl(bottom, baseUrl),
+      shoes: withImageUrl(shoesItem, baseUrl),
     });
   }
 );

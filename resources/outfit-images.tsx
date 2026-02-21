@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Image, McpUseProvider, useWidget, useWidgetTheme, type WidgetMetadata } from "mcp-use/react";
+import { McpUseProvider, useWidget, useWidgetTheme, type WidgetMetadata } from "mcp-use/react";
 import { z } from "zod";
 
 function useColors() {
@@ -17,7 +17,7 @@ function useColors() {
 
 const imageSchema = z.object({
   name: z.string(),
-  imagePath: z.string(),
+  imageUrl: z.string(),
 });
 
 const propsSchema = z.object({
@@ -95,8 +95,8 @@ export default function OutfitImages() {
             >
               <div style={{ fontSize: 12, color: colors.muted }}>{label}</div>
               <div style={{ fontWeight: 700 }}>{item.name}</div>
-              <Image
-                src={item.imagePath}
+              <img
+                src={item.imageUrl}
                 alt={item.name}
                 style={{ width: "100%", borderRadius: 8 }}
               />
