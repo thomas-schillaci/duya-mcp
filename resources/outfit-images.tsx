@@ -92,9 +92,6 @@ export default function OutfitImages() {
     controls: { prev: () => void; next: () => void }
   ) => {
     const item = items[index];
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
-      `${item.name} ${item.description}`
-    )}`;
     return (
       <div
         style={{
@@ -111,13 +108,11 @@ export default function OutfitImages() {
           }}
         >
           <div style={{ position: "relative" }}>
-            <a href={searchUrl} target="_blank" rel="noreferrer">
-              <Image
-                src={item.imagePath}
-                alt={item.name}
-                style={{ width: "100%", borderRadius: 8, display: "block", cursor: "pointer" }}
-              />
-            </a>
+            <Image
+              src={item.imagePath}
+              alt={item.name}
+              style={{ width: "100%", borderRadius: 8, display: "block" }}
+            />
             <button
               type="button"
               onClick={controls.prev}

@@ -288,32 +288,15 @@ server.tool(
 
 server.tool(
   {
-    name: "get-outfit-images",
-    description:
-      "Get image URLs for selected top, bottom, and shoes by id",
+    name: "add-to-basket",
+    description: "Add selected outfit items to a basket and return OK",
     schema: z.object({
       topId: z.string().describe("Selected top id"),
       bottomId: z.string().describe("Selected bottom id"),
       shoesId: z.string().describe("Selected shoes id"),
     }),
   },
-  async ({ topId, bottomId, shoesId }) => {
-    const top = allItems.find((item) => item.id === topId);
-    const bottom = allItems.find((item) => item.id === bottomId);
-    const shoesItem = allItems.find((item) => item.id === shoesId);
-
-    if (!top || !bottom || !shoesItem) {
-      return error(
-        "One or more selected items were not found. Please re-check the ids."
-      );
-    }
-
-    return object({
-      top: withImageUrl(top),
-      bottom: withImageUrl(bottom),
-      shoes: withImageUrl(shoesItem),
-    });
-  }
+  async () => text("OK")
 );
 
 server.listen().then(() => {
