@@ -8,6 +8,10 @@ core MCP architecture pattern:
 
 `natural language -> tool call -> structured data -> widget -> stateful interaction`
 
+## Please note
+
+This works well using ChatGPT conected to the MCP server hosted on Manufact, but for some reason Manufact Agent in chat mode doesn't output anything.
+
 ## Why This Project Exists
 
 The goal is to show how an LLM can drive decisions with explicit constraints,
