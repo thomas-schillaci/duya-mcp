@@ -60,6 +60,31 @@ server.tool(
   }
 );
 
+server.tool(
+  {
+    name: "probe-widget-route",
+    description: "Probe the widget URL from the server to verify routing",
+    schema: z.object({}),
+  },
+  async () => {
+    const url = `${runtimeBaseUrl}/mcp-use/widgets/outfit-images/`;
+    try {
+      const response = await fetch(url, { method: "GET" });
+      const textSnippet = (await response.text()).slice(0, 200);
+      return object({
+        url,
+        status: response.status,
+        ok: response.ok,
+        textSnippet,
+      });
+    } catch (err) {
+      return error(
+        `Probe failed: ${err instanceof Error ? err.message : "unknown error"}`
+      );
+    }
+  }
+);
+
 type OutfitItem = {
   id: string;
   name: string;
